@@ -1,3 +1,0 @@
-listen for wallet change, and update provider
-display message if not connected/no MM
-display message if 0 freenft item with links to opensea etcetc

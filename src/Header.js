@@ -314,22 +314,39 @@ function Header({theme, setTheme, web3Provider, setWeb3Provider})  {
         icon: twitter}
     ]
 
+    // Subscribe to accounts change
+    /*provider.on("accountsChanged", (accounts: string[]) => {
+     console.log(accounts);
+    });*/
+
     async function connectWallet() {
-        try {
-            let web3modal = new Web3Modal( {
-                cacheProvider: false,
-                providerOptions
-            })
-            const web3ModalInstance = await web3modal.connect()
-            const web3ModalProvider = new ethers.providers.Web3Provider(web3ModalInstance)
-            if(web3ModalProvider) {
-                setWeb3Provider(web3ModalProvider)               
+        if(web3Provider == null) {
+            try {
+                let web3modal = new Web3Modal( {
+                    cacheProvider: false,
+                    providerOptions
+                })
+                const web3ModalInstance = await web3modal.connect()
+                const web3ModalProvider = new ethers.providers.Web3Provider(web3ModalInstance)
+                setWeb3Provider(web3ModalProvider)    
+                await walletEventHandler(web3ModalInstance)        
+            } catch (error) {
+                console.error(error)
             }
-        } catch (error) {
-            console.error(error)
         }
     }
 
+    const walletEventHandler = async (instance) => {
+        await instance.on("accountsChanged", () => {
+          setWeb3Provider(new ethers.providers.Web3Provider(instance))  
+        });
+        await instance.on("disconnect", () => {
+          setWeb3Provider(new ethers.providers.Web3Provider(instance))  
+        });
+        await instance.on("chainChanged", () => {
+          setWeb3Provider(new ethers.providers.Web3Provider(instance))  
+        });
+      };
 
         return (
             <HeaderContainer>
