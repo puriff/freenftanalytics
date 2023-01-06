@@ -44,10 +44,118 @@ const HeaderContainer = styled.div`
         color: ${(props) => props.theme.search_cursor};
     }   
 
+    .header-buttons {
+        display: none;
+    }
+
     @media only screen and (min-width: 480px) {
+        .header-buttons {
+            display: none;
+        }
     }
 
     @media only screen and (min-width: 768px) {
+        .header-burger {
+            display: none;
+        }
+
+        .header-buttons {
+            position: absolute;
+            right: 1%;
+            height: 100%;
+            width: 60%;
+            display: flex;
+            align-items: center;
+            justify-content: right;
+
+            .mode-div {
+                position: relative;
+                height: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: right;
+
+                .theme-button-dark-drawer {
+                    position: relative;
+                    aspect-ratio : 1 / 1;
+                    height: 100%;
+                    border-radius: 15px;
+                    background: transparent;
+                    color: ${(props) => props.theme.search_cursor};
+                    font-size: 24px;
+                    border: 1px solid ${(props) => props.theme.search_cursor};
+            
+                    :hover {
+                        background: white;
+                        color: black;
+                    }
+                }
+            
+                .theme-button-light-drawer {
+                    position: relative;
+                    aspect-ratio : 1 / 1;
+                    height: 100%;
+                    border-radius: 15px;
+                    background: transparent;
+                    font-size: 24px;
+                    border: 1px solid ${(props) => props.theme.search_cursor};  
+                    color: ${(props) => props.theme.search_cursor};
+            
+                    :hover {
+                        background: black;
+                        color: white;
+                    }
+                }    
+            }
+
+            .connect-button {
+                    position: relative;
+                    height: 50%;
+                    width: fit-content;
+                    margin-top: 5%;
+                    margin-bottom: 5%;
+                    padding-left: 15px;
+                    padding-right: 15px;
+                    border-radius: 15px;
+                    color: ${(props) => props.theme.search_cursor};
+                    border: 1px ${(props) => props.theme.search_cursor} solid;
+                    font-size: 18px;
+                    font-weight: bold;
+                    margin-right: 1%;
+
+                    .button-text {
+                        position: relative;
+                        width: 100%;
+                    }
+
+                :hover {
+                    background: ${(props) => props.theme.column_background};
+                }
+            }
+
+            .header-links {
+                position: relative;
+                height: 70%;
+                width: 30%;
+                color: ${(props) => props.theme.search_cursor};
+                font-size: 20px;
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                justify-content: right;
+
+                .links-button {
+                    height: fit-content;
+                    color: ${(props) => props.theme.search_cursor};
+                    width: 20%;
+
+                    .img-links {
+                        aspect-ratio: 1/1;
+                        width: 100%;
+                    }
+                }
+            }
+        }
     }
 
     @media only screen and (min-width: 1280px) {
@@ -82,7 +190,7 @@ const DrawerStyled = styled.div`
         border-radius: 15px;
         color: ${(props) => props.theme.search_cursor};
         border: 1px ${(props) => props.theme.search_cursor} solid;
-        font-size: 24px;
+        font-size: 18px;
         font-weight: bold;
 
         .button-text {
@@ -106,7 +214,7 @@ const DrawerStyled = styled.div`
             }
     }
 
-    .mode-div {
+    .mode-div-drawer {
         position: absolute;
         width: fit-content;
         height: 10%;
@@ -147,10 +255,30 @@ const DrawerStyled = styled.div`
         }    
     }
     
-    @media only screen and (max-width: 320px) {
+    @media only screen and (min-width: 480px) {
         .launch-app-drawer {
-            font-size: 18px;
+            font-size: 22px;    
         }
+
+        .links-button-drawer {
+            width: 15%;
+            height: fit-content;
+            color: ${(props) => props.theme.search_cursor};
+            font-size: 20px;
+            display: flex;
+            margin: auto;
+            margin-top: 1%;
+            border-radius: 50%;
+            
+            .img-drawer {
+                width: 100%;
+            }
+        }
+
+    }
+
+    @media only screen and (min-width: 768px) {
+        display: none;
     }
 `;
 
@@ -197,7 +325,6 @@ function Header({theme, setTheme, web3Provider, setWeb3Provider})  {
             if(web3ModalProvider) {
                 setWeb3Provider(web3ModalProvider)               
             }
-
         } catch (error) {
             console.error(error)
         }
@@ -207,6 +334,29 @@ function Header({theme, setTheme, web3Provider, setWeb3Provider})  {
         return (
             <HeaderContainer>
                 <img className='header-logo' src={theme == "light" ? logo : logoWhite}></img>
+                    <div className='header-buttons'>
+                        <Box className='header-links'>
+                            {links.map((item, name) => {
+                                return <Button key={item.name} className='links-button' onClick={() => openLink(item.link)}> <img className='img-links' src={item.icon}></img> </Button>
+                            })}
+                        </Box>
+                        <Button className='connect-button' onClick={() => connectWallet()}>
+                            {web3Provider != null ? 
+                            <div className='button-text'>{(web3Provider.provider.selectedAddress.substring(0,6)) + "..." + web3Provider.provider.selectedAddress.substring(web3Provider.provider.selectedAddress.length-6) }</div>
+                            : 
+                            <div className='button-text'>Connect wallet</div>}
+                        </Button>
+                        <div className='mode-div'>
+                            { theme == "dark" ? 
+                            <IconButton className='theme-button-dark-drawer' onClick={themeToggler}>
+                                <LightModeIcon/>
+                            </IconButton> :
+                            <IconButton className='theme-button-light-drawer' onClick={themeToggler}>
+                                <DarkModeOutlinedIcon/>
+                            </IconButton>
+                            }
+                        </div>
+                    </div>
                     <IconButton
                     edge="start"
                     color="inherit"
@@ -238,12 +388,12 @@ function Header({theme, setTheme, web3Provider, setWeb3Provider})  {
                             <div className='button-text'>Connect wallet</div>}
                             
                         </Button>
-                        <Box className='box'>
+                        <Box>
                             {links.map((item, name) => {
                                 return <Button key={item.name} className='links-button-drawer' onClick={() => openLink(item.link)}> <img className='img-drawer' src={item.icon}></img> </Button>
                             })}
                         </Box>
-                        <div className='mode-div'>
+                        <div className='mode-div-drawer'>
                             { theme == "dark" ? 
                             <IconButton className='theme-button-dark-drawer' onClick={themeToggler}>
                                 <LightModeIcon/>

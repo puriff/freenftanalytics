@@ -13,21 +13,12 @@ const Container = styled.div`
     height: 100vh;
     background: ${(props) => props.theme.background};
     overflow-x: hidden;
-
-    .connected {
-      color: ${(props) => props.theme.search_cursor};
-    }
 `;
 
 function App() {
 
   const [theme, setTheme] = useState("dark")
   const [web3Provider, setWeb3Provider] = useState(null)
-
-
-  useEffect(() => {
-
-  }, [])
 
   return (
     <ThemeProvider theme={theme === "light" ? lightTheme : darkTheme}>

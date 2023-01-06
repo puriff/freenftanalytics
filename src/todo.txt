@@ -1,8 +1,3 @@
 listen for wallet change, and update provider
-
-whitelist contracts for : OG PASS / launch pass / cargo / aura / 
-pull balance of each for the address connected
-display all
-end
-
-analytics page for each collec showing holders/supply/volume etcetc
+display message if not connected/no MM
+display message if 0 freenft item with links to opensea etcetc
